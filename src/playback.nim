@@ -1,7 +1,7 @@
 import
   sdl2,
   sdl2/audio,
-  math,
+  std/math,
   notes,
   sequence
 
@@ -62,7 +62,7 @@ proc quitAudio() =
   audio.closeAudio()
   sdl2.quit()
 
-proc playSequence*(sequence: seq[SequenceItem]) =
+proc play*(sequence: seq[SequenceItem]) =
   ## Play some given sequence
   if not initAudio():
     return

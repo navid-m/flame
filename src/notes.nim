@@ -1,4 +1,5 @@
-import std/math
+import
+  std/math
 
 type
   Note* = enum
