@@ -7,6 +7,8 @@ export
   DelayBlock,
   SequenceItem,
   addAll,
+  single,
+  wait,
   play
 
 when isMainModule:
