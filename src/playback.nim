@@ -58,24 +58,18 @@ proc initAudio*(): bool =
   return true
 
 proc quitAudio() =
-  closeAudio()
+  ## Close audio output
+  audio.closeAudio()
   sdl2.quit()
 
 proc playSequence*(sequence: seq[SequenceItem]) =
+  ## Play some given sequence
+  if not initAudio():
+    return
+  defer: quitAudio()
   for item in sequence:
     if item of DelayBlock:
       sdl2.delay(cast[DelayBlock](item).amount)
     elif item of NoteBlock:
       var asNote = cast[NoteBlock](item)
       setCurrentNote(MidiNote(note: asNote.note, octave: asNote.octave))
-
-proc play*() =
-  if not initAudio():
-    return
-  defer: quitAudio()
-  # setCurrentNote(MidiNote(note: Note.E, octave: 4))
-  # sdl2.delay(1000)
-  # setCurrentNote(MidiNote(note: Note.D, octave: 5))
-  # sdl2.delay(1000)
-  # setCurrentNote(MidiNote(note: Note.G, octave: 4))
-  # sdl2.delay(1000)
