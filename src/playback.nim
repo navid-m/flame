@@ -2,7 +2,8 @@ import
   sdl2,
   sdl2/audio,
   math,
-  midi_note
+  notes,
+  sequence
 
 const
   SampleRate = 44100
@@ -12,7 +13,7 @@ const
 var progress: int
 var currentNote = 140.0
 
-proc setCurrentNote(note: MidiNote) =
+proc setCurrentNote*(note: MidiNote) =
   currentNote = frequency(note)
 
 proc generateSineAmplitude(freq: float): float32 =
@@ -30,7 +31,7 @@ proc audioCallback(userdata: pointer; stream: ptr uint8; len: cint) {.cdecl.} =
   for i in 0 ..< samples:
     floatStream[i] = generateSineAmplitude(currentNote)
 
-proc initAudio*(freq: float): bool =
+proc initAudio*(): bool =
   ## Initialize the audio output
   if sdl2.init(INIT_AUDIO) != SdlSuccess:
     echo("Couldn't initialize SDL audio: ", $getError())
@@ -60,15 +61,21 @@ proc quitAudio() =
   closeAudio()
   sdl2.quit()
 
+proc playSequence*(sequence: seq[SequenceItem]) =
+  for item in sequence:
+    if item of DelayBlock:
+      sdl2.delay(cast[DelayBlock](item).amount)
+    elif item of NoteBlock:
+      var asNote = cast[NoteBlock](item)
+      setCurrentNote(MidiNote(note: asNote.note, octave: asNote.octave))
+
 proc play*() =
-  if not initAudio(440.0):
+  if not initAudio():
     return
   defer: quitAudio()
-  while true:
-    setCurrentNote(MidiNote(note: Note.E, octave: 4))
-    sdl2.delay(1000)
-    setCurrentNote(MidiNote(note: Note.D, octave: 5))
-    sdl2.delay(1000)
-    setCurrentNote(MidiNote(note: Note.G, octave: 4))
-    sdl2.delay(1000)
-
+  # setCurrentNote(MidiNote(note: Note.E, octave: 4))
+  # sdl2.delay(1000)
+  # setCurrentNote(MidiNote(note: Note.D, octave: 5))
+  # sdl2.delay(1000)
+  # setCurrentNote(MidiNote(note: Note.G, octave: 4))
+  # sdl2.delay(1000)
