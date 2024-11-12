@@ -1,7 +1,6 @@
 import
   playback,
-  sequence,
-  notes
+  sequence
 
 export
   NoteBlock,
@@ -13,12 +12,11 @@ export
 when isMainModule:
   var song: seq[SequenceItem]
   song = song.addAll(
-    NoteBlock(note: Note.A, octave: 4),
-    DelayBlock(amount: 1000),
-    NoteBlock(note: Note.D, octave: 4),
-    DelayBlock(amount: 1000),
-    NoteBlock(note: Note.C, octave: 4),
-    DelayBlock(amount: 1000)
+    single("A4"),
+    wait(1000),
+    single("D4"),
+    wait(1000),
+    single("C4"),
+    wait(1000)
   )
   play(song)
-

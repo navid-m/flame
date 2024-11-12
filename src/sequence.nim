@@ -1,4 +1,10 @@
-import notes
+import
+  notes,
+  std /
+  [
+    strutils,
+    tables
+  ]
 
 type SequenceItem* = ref object of RootRef
 
@@ -13,3 +19,21 @@ proc addAll*(items: seq[SequenceItem], toAdd: varargs[SequenceItem]): seq[Sequen
   result = items
   for addable in toAdd:
     result.add(addable)
+
+let stringsToNotes: Table[string, Note] = {
+  "A": Note.A,
+  "B": Note.B,
+  "C": Note.C,
+  "D": Note.D,
+  "E": Note.E,
+  "F": Note.F,
+  "G": Note.G
+}.toTable
+
+proc single*(noteName: string): NoteBlock =
+  let
+    noteToUse = noteName[0]
+    octaveToUse = parseInt($noteName[1])
+  return NoteBlock(note: stringsToNotes[$noteToUse], octave: octaveToUse)
+
+proc wait*(duration: uint32): DelayBlock = DelayBlock(amount: duration)
