@@ -26,6 +26,8 @@ let stringsToNotes: Table[string, Note] = {
   "E": Note.E,
   "F": Note.F,
   "G": Note.G,
+  "C#": Note.Cs,
+  "D#": Note.Ds,
   "G#": Note.Gs,
   "F#": Note.Fs,
   "A#": Note.As,
@@ -37,11 +39,21 @@ proc addAll*(items: seq[SequenceItem], toAdd: varargs[SequenceItem]): seq[Sequen
   for addable in toAdd:
     result.add(addable)
 
+func getOctaveIndex(note: string): int =
+  if $"#" in note:
+    return 2
+  return 1
+
+func getNtuseRoot(note: string): string =
+  if $"#" in note:
+    return note[0..1]
+  return $note[0]
+
 proc single*(noteName: string): SoundBlock =
   ## Get back some note item
   let
-    noteToUse = noteName[0]
-    octaveToUse = parseInt($noteName[1])
+    noteToUse = getNtuseRoot($noteName[0 .. ^2])
+    octaveToUse = parseInt($noteName[getOctaveIndex(noteName)])
   return SoundBlock(
     note: stringsToNotes[$noteToUse],
     octave: octaveToUse,
@@ -53,8 +65,8 @@ proc chord*(noteNames: varargs[string]): SoundBlock =
   var chordNotes: seq[ChordNote]
   for noteName in noteNames:
     let
-      noteToUse = noteName[0]
-      octaveToUse = parseInt($noteName[1])
+      noteToUse = getNtuseRoot($noteName[0 .. ^2])
+      octaveToUse = parseInt($noteName[getOctaveIndex(noteName)])
     chordNotes.add(ChordNote(
       note: stringsToNotes[$noteToUse],
       octave: octaveToUse
@@ -64,7 +76,7 @@ proc chord*(noteNames: varargs[string]): SoundBlock =
   let firstNote = noteNames[0]
   result = SoundBlock(
     note: stringsToNotes[$firstNote[0]],
-    octave: parseInt($firstNote[1]),
+    octave: parseInt($firstNote[getOctaveIndex(firstNote)]),
     isChord: true,
     chordNotes: chordNotes
   )
