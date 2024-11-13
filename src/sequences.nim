@@ -31,7 +31,6 @@ let stringsToNotes: Table[string, Note] = {
   "D#": Note.Ds,
   "G#": Note.Gs,
   "F#": Note.Fs,
-  "A#": Note.As,
 }.toTable
 
 proc addAll*(items: seq[SequenceItem], toAdd: varargs[SequenceItem]): seq[SequenceItem] =
