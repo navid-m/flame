@@ -40,11 +40,13 @@ proc addAll*(items: seq[SequenceItem], toAdd: varargs[SequenceItem]): seq[Sequen
     result.add(addable)
 
 func getOctaveIndex(note: string): int =
+  ## Internally retrieve octave index
   if $"#" in note:
     return 2
   return 1
 
 func getNtuseRoot(note: string): string =
+  ## Internally retrieve note root name
   if $"#" in note:
     return note[0..1]
   return $note[0]
