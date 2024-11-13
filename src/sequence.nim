@@ -9,7 +9,7 @@ import
 type SequenceItem* = ref object of RootRef
 
 type DelayBlock* = ref object of SequenceItem
-  amount*: uint32
+  beats*: float32
 
 type NoteBlock* = ref object of SequenceItem
   note*: Note
@@ -36,4 +36,4 @@ proc single*(noteName: string): NoteBlock =
     octaveToUse = parseInt($noteName[1])
   return NoteBlock(note: stringsToNotes[$noteToUse], octave: octaveToUse)
 
-proc wait*(duration: uint32): DelayBlock = DelayBlock(amount: duration)
+proc wait*(beats: float32): DelayBlock = DelayBlock(beats: beats)

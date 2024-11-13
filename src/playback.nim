@@ -10,10 +10,17 @@ const
   Volume = 0.4
   BufferSizeInSamples = 4096
 
-var progress: int
-var currentNote = 140.0
+var
+  progress: int
+  currentNote = 140.0
+  beatDuration: float32 = 600.0
+
+proc setBpm*(bpm: int) =
+  ## Set BPM of the current playback
+  beatDuration = 60000.0.float32 / bpm.float32
 
 proc setCurrentNote*(note: MidiNote) =
+  ## Set the current note, this maps to a frequency internally
   currentNote = frequency(note)
 
 proc generateSineAmplitude(freq: float): float32 =
@@ -63,13 +70,14 @@ proc quitAudio() =
   sdl2.quit()
 
 proc play*(sequence: seq[SequenceItem]) =
-  ## Play some given sequence
+  ## Play the given sequence
   if not initAudio():
     return
   defer: quitAudio()
   for item in sequence:
     if item of DelayBlock:
-      sdl2.delay(cast[DelayBlock](item).amount)
+      let beats = cast[DelayBlock](item).beats
+      sdl2.delay(uint32(beats.float32 * beatDuration))
     elif item of NoteBlock:
       var asNote = cast[NoteBlock](item)
       setCurrentNote(MidiNote(note: asNote.note, octave: asNote.octave))
