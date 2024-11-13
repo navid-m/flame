@@ -1,10 +1,6 @@
 import
   notes,
-  std /
-  [
-    strutils,
-    tables
-  ]
+  std/[strutils, tables]
 
 type
   SequenceItem* = ref object of RootRef
@@ -12,9 +8,15 @@ type
   DelayBlock* = ref object of SequenceItem
     beats*: float32
 
+  ChordNote* = object
+    note*: Note
+    octave*: int
+
   NoteBlock* = ref object of SequenceItem
     note*: Note
     octave*: int
+    isChord*: bool
+    chordNotes*: seq[ChordNote]
 
 let stringsToNotes: Table[string, Note] = {
   "A": Note.A,
@@ -40,7 +42,32 @@ proc single*(noteName: string): NoteBlock =
   let
     noteToUse = noteName[0]
     octaveToUse = parseInt($noteName[1])
-  return NoteBlock(note: stringsToNotes[$noteToUse], octave: octaveToUse)
+  return NoteBlock(
+    note: stringsToNotes[$noteToUse],
+    octave: octaveToUse,
+    isChord: false
+  )
+
+proc chord*(noteNames: varargs[string]): NoteBlock =
+  ## Create a chord from multiple notes
+  var chordNotes: seq[ChordNote]
+  for noteName in noteNames:
+    let
+      noteToUse = noteName[0]
+      octaveToUse = parseInt($noteName[1])
+    chordNotes.add(ChordNote(
+      note: stringsToNotes[$noteToUse],
+      octave: octaveToUse
+    ))
+
+  # Use first note as the main note
+  let firstNote = noteNames[0]
+  result = NoteBlock(
+    note: stringsToNotes[$firstNote[0]],
+    octave: parseInt($firstNote[1]),
+    isChord: true,
+    chordNotes: chordNotes
+  )
 
 proc wait*(beats: float32): DelayBlock =
   ## Get back some delay item

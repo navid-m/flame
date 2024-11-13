@@ -16,9 +16,9 @@ when isMainModule:
   song = song.addAll(
     single("A4"),
     wait(1),
-    single("D4"),
+    chord("D4", "A4"),
     wait(1),
-    single("C4"),
+    chord("C4", "D#5"),
     wait(1)
   )
   play(song)
