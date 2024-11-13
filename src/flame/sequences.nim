@@ -1,6 +1,10 @@
 import
   notes,
-  std/[strutils, tables]
+  std /
+  [
+    strutils,
+    tables
+  ]
 
 type
   SequenceItem* = ref object of RootRef
