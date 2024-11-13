@@ -52,9 +52,8 @@ proc generateSineAmplitude(freq: float): float32 =
 proc audioCallback(userdata: pointer; stream: ptr uint8; len: cint) {.cdecl.} =
   ## Audio callback to mix all active notes
   var floatStream = cast[ptr UncheckedArray[float32]](stream)
-  let samples = len div sizeof(float32)
 
-  for i in 0 ..< samples:
+  for i in 0 ..< len div sizeof(float32):
     var mixed = 0.0'f32
     var activeCount = 0
 
