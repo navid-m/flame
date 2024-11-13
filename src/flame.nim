@@ -18,6 +18,6 @@ when isMainModule:
     chord("C#4", "D#5"),
     wait(1),
     chord("C4", "D5"),
-    wait(1)
+    wait(1),
   )
   play(song)

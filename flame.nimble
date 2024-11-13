@@ -5,7 +5,7 @@ author        = "Navid M"
 description   = "Easy sound synthesis library"
 license       = "MIT"
 srcDir        = "src"
-bin           = @["bones"]
+bin           = @["flame"]
 
 
 # Dependencies
