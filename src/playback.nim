@@ -105,15 +105,20 @@ proc play*(sequence: seq[SequenceItem]) =
   if not initAudio():
     return
   defer: quitAudio()
+
   for item in sequence:
     if item of DelayBlock:
-      let beats = cast[DelayBlock](item).beats
-      sdl2.delay(uint32(beats.float32 * beatDuration))
+      sdl2.delay(uint32(cast[DelayBlock](item).beats.float32 * beatDuration))
+
     elif item of NoteBlock:
       var asNote = cast[NoteBlock](item)
       if asNote.isChord:
         clearNotes()
         for note in asNote.chordNotes:
-          addNote(frequency(MidiNote(note: note.note, octave: note.octave)))
+          addNote(
+            frequency(MidiNote(note: note.note, octave: note.octave))
+          )
       else:
-        setCurrentNote(MidiNote(note: asNote.note, octave: asNote.octave))
+        setCurrentNote(
+          MidiNote(note: asNote.note, octave: asNote.octave)
+        )
