@@ -67,7 +67,7 @@ proc audioCallback(userdata: pointer; stream: ptr uint8; len: cint) {.cdecl.} =
       mixed = mixed / activeCount.float32
 
     floatStream[i] = mixed
-    inc(progress)
+    inc progress
 
 proc initAudio*(): bool =
   ## Initialize the audio output
