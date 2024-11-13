@@ -104,7 +104,8 @@ proc play*(sequence: seq[SequenceItem]) =
   ## Play the given sequence
   if not initAudio():
     return
-  defer: quitAudio()
+  defer:
+    quitAudio()
 
   for item in sequence:
     if item of DelayBlock:
