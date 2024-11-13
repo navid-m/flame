@@ -8,6 +8,7 @@ export
   SequenceItem,
   addAll,
   single,
+  chord,
   wait,
   play
 
