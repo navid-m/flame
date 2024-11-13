@@ -26,6 +26,7 @@ let stringsToNotes: Table[string, Note] = {
   "E": Note.E,
   "F": Note.F,
   "G": Note.G,
+  "A#": Note.As,
   "C#": Note.Cs,
   "D#": Note.Ds,
   "G#": Note.Gs,

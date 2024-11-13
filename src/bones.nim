@@ -1,6 +1,6 @@
 import
   playback,
-  sequence
+  sequences
 
 export
   SoundBlock,

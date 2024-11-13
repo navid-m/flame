@@ -3,7 +3,7 @@ import
   sdl2/audio,
   std/math,
   notes,
-  sequence
+  sequences
 
 const
   SampleRate = 44100
