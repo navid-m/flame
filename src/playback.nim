@@ -73,7 +73,7 @@ proc initAudio*(): bool =
   ## Initialize the audio output
 
   if sdl2.init(INIT_AUDIO) != SdlSuccess:
-    echo("Couldn't initialize SDL audio: ", $getError())
+    echo("Couldn't initialize SDL audio:", $getError())
     return false
 
   var desired: AudioSpec
@@ -89,7 +89,7 @@ proc initAudio*(): bool =
   audio.closeAudio()
 
   if audio.openAudio(addr desired, addr obtained) < 0:
-    echo("Couldn't open audio device: ", $getError())
+    echo("Couldn't open audio device:", $getError())
     return false
 
   audio.pauseAudio(0)
