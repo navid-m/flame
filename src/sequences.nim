@@ -74,7 +74,6 @@ proc chord*(noteNames: varargs[string]): SoundBlock =
       octave: octaveToUse
     ))
 
-  # Use first note as the main note
   let firstNote = noteNames[0]
   result = SoundBlock(
     note: stringsToNotes[$firstNote[0]],
