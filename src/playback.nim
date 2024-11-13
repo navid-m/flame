@@ -110,8 +110,8 @@ proc play*(sequence: seq[SequenceItem]) =
     if item of DelayBlock:
       sdl2.delay(uint32(cast[DelayBlock](item).beats.float32 * beatDuration))
 
-    elif item of NoteBlock:
-      var asNote = cast[NoteBlock](item)
+    elif item of SoundBlock:
+      var asNote = cast[SoundBlock](item)
       if asNote.isChord:
         clearNotes()
         for note in asNote.chordNotes:

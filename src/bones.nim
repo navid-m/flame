@@ -3,7 +3,7 @@ import
   sequence
 
 export
-  NoteBlock,
+  SoundBlock,
   DelayBlock,
   SequenceItem,
   addAll,
@@ -18,7 +18,7 @@ when isMainModule:
     wait(1),
     chord("D4", "A4"),
     wait(1),
-    chord("C4", "D#5"),
+    chord("C4", "D5"),
     wait(1)
   )
   play(song)

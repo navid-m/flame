@@ -12,7 +12,7 @@ type
     note*: Note
     octave*: int
 
-  NoteBlock* = ref object of SequenceItem
+  SoundBlock* = ref object of SequenceItem
     note*: Note
     octave*: int
     isChord*: bool
@@ -37,18 +37,18 @@ proc addAll*(items: seq[SequenceItem], toAdd: varargs[SequenceItem]): seq[Sequen
   for addable in toAdd:
     result.add(addable)
 
-proc single*(noteName: string): NoteBlock =
+proc single*(noteName: string): SoundBlock =
   ## Get back some note item
   let
     noteToUse = noteName[0]
     octaveToUse = parseInt($noteName[1])
-  return NoteBlock(
+  return SoundBlock(
     note: stringsToNotes[$noteToUse],
     octave: octaveToUse,
     isChord: false
   )
 
-proc chord*(noteNames: varargs[string]): NoteBlock =
+proc chord*(noteNames: varargs[string]): SoundBlock =
   ## Create a chord from multiple notes
   var chordNotes: seq[ChordNote]
   for noteName in noteNames:
@@ -62,7 +62,7 @@ proc chord*(noteNames: varargs[string]): NoteBlock =
 
   # Use first note as the main note
   let firstNote = noteNames[0]
-  result = NoteBlock(
+  result = SoundBlock(
     note: stringsToNotes[$firstNote[0]],
     octave: parseInt($firstNote[1]),
     isChord: true,
