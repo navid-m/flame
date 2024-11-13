@@ -77,12 +77,14 @@ proc initAudio*(): bool =
   var desired: AudioSpec
   var obtained: AudioSpec
 
-  desired.freq = cint(SampleRate)
-  desired.format = AUDIO_F32MSB
-  desired.channels = 2
-  desired.samples = uint16(BufferSizeInSamples)
-  desired.callback = audioCallback
-  desired.userdata = nil
+  desired = AudioSpec(
+    freq: cint(SampleRate),
+    format: AUDIO_F32MSB,
+    channels: 2,
+    samples: uint16(BufferSizeInSamples),
+    callback: audioCallback,
+    userdata: nil
+  )
 
   audio.closeAudio()
 
