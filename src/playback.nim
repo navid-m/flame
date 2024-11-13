@@ -45,7 +45,7 @@ proc setCurrentNote*(note: MidiNote) =
 proc generateSineAmplitude(freq: float): float32 =
   ## Generate a sine wave amplitude for a given frequency
   let cycleLength = float(SampleRate) / freq
-  result = float32(
+  return float32(
     sin(float(progress mod int(cycleLength)) / cycleLength * 2.0 * PI) * Volume
   )
 
@@ -116,7 +116,10 @@ proc play*(sequence: seq[SequenceItem]) =
         clearNotes()
         for note in asNote.chordNotes:
           addNote(
-            frequency(MidiNote(note: note.note, octave: note.octave))
+            frequency(MidiNote(
+              note: note.note,
+              octave: note.octave
+            ))
           )
       else:
         setCurrentNote(
