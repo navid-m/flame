@@ -71,7 +71,6 @@ proc audioCallback(userdata: pointer; stream: ptr uint8; len: cint) {.cdecl.} =
 
 proc initAudio*(): bool =
   ## Initialize the audio output
-
   if sdl2.init(INIT_AUDIO) != SdlSuccess:
     echo("Couldn't initialize SDL audio:", $getError())
     return false
