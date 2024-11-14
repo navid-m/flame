@@ -11,24 +11,23 @@ type
 
 const
   baseFrequency* = 440.0
-  noteFrequencies: array[12, float] = [
-    261.63, # C
-    277.18, # Cs
-    293.66, # D
-    311.13, # Ds
-    329.63, # E
-    349.23, # F
-    369.99, # Fs
-    392.00, # G
-    415.30, # Gs
-    440.00, # A
-    466.16, # As
-    493.88  # B
-  ]
+
+proc getNoteFrequency(note: Note): float =
+  ## Get corresponding base frequency given some note
+  case note
+    of Note.C: 261.63
+    of Note.Cs: 277.18
+    of Note.D: 293.66
+    of Note.Ds: 311.13
+    of Note.E: 329.63
+    of Note.F: 349.23
+    of Note.Fs: 369.99
+    of Note.G: 392.00
+    of Note.Gs: 415.30
+    of Note.A: 440.00
+    of Note.As: 466.16
+    of Note.B: 493.88
 
 proc frequency*(note: MidiNote): float =
   ## Calculate frequency for a given note and octave
-  let
-    noteIndex = ord(note.note)
-    octaveDiff = note.octave - 4
-  return noteFrequencies[noteIndex] * (2.0 ^ octaveDiff)
+  return getNoteFrequency(note.note) * (2.0 ^ (note.octave - 4))
