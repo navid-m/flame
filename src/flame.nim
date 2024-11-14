@@ -1,6 +1,9 @@
 import
-  flame/playback,
-  flame/sequences
+  flame /
+  [
+    playback,
+    sequences
+  ]
 
 export
   SoundBlock,
