@@ -1,5 +1,4 @@
-import
-  std/math
+import std/math
 
 type
   Note* = enum
@@ -9,8 +8,7 @@ type
     note*: Note
     octave*: int
 
-const
-  baseFrequency* = 440.0
+const baseFrequency* = 440.0
 
 proc getNoteFrequency(note: Note): float =
   ## Get corresponding base frequency given some note
