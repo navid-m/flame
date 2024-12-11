@@ -1,4 +1,4 @@
-# flame
+# Flame
 
 High-level music and audio sequencing library for Nim.
 
