@@ -23,7 +23,7 @@ var
   beatDuration: float32 = 600.0
   isFadingOut: bool = false
 
-# Initialize the `activeNotes` array with empty `ActiveNote` objects
+# Initialize with empty ActiveNotes
 for i in 0 ..< activeNotes.len:
   activeNotes[i] = ActiveNote(frequency: 0.0, isPlaying: false,
       fadeOutVolume: 1.0)
