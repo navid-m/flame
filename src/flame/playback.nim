@@ -9,16 +9,24 @@ const
   SampleRate = 44100
   Volume = 0.4
   BufferSizeInSamples = 4096
+  FadeOutDurationMs = 100.0
 
 type
-  ActiveNote = object
+  ActiveNote = ref object
     frequency: float
     isPlaying: bool
+    fadeOutVolume: float32
 
 var
   progress: int
   activeNotes: array[8, ActiveNote]
   beatDuration: float32 = 600.0
+  isFadingOut: bool = false
+
+# Initialize the `activeNotes` array with empty `ActiveNote` objects
+for i in 0 ..< activeNotes.len:
+  activeNotes[i] = ActiveNote(frequency: 0.0, isPlaying: false,
+      fadeOutVolume: 1.0)
 
 proc setBpm*(bpm: int) =
   ## Set BPM of the current playback
@@ -28,6 +36,7 @@ proc clearNotes*() =
   ## Clear all currently playing notes
   for i in 0 ..< activeNotes.len:
     activeNotes[i].isPlaying = false
+    activeNotes[i].fadeOutVolume = 1.0
 
 proc addNote*(freq: float) =
   ## Add a note to be played simultaneously
@@ -35,6 +44,7 @@ proc addNote*(freq: float) =
     if not activeNotes[i].isPlaying:
       activeNotes[i].frequency = freq
       activeNotes[i].isPlaying = true
+      activeNotes[i].fadeOutVolume = 1.0
       return
 
 proc setCurrentNote*(note: MidiNote) =
@@ -42,24 +52,32 @@ proc setCurrentNote*(note: MidiNote) =
   clearNotes()
   addNote(frequency(note))
 
-proc generateSineAmplitude(freq: float): float32 =
-  ## Generate a sine wave amplitude for a given frequency
+proc generateSineAmplitude(freq: float, volume: float32): float32 =
+  ## Generate a sine wave amplitude for a given frequency with fade-out volume
   let cycleLength = float(SampleRate) / freq
   return float32(
-    sin(float(progress mod int(cycleLength)) / cycleLength * 2.0 * PI) * Volume
+    sin(float(progress mod int(cycleLength)) / cycleLength * 2.0 * PI) *
+        Volume * volume
   )
 
 proc audioCallback(userdata: pointer; stream: ptr uint8; len: cint) {.cdecl.} =
-  ## Audio callback to mix all active notes
+  ## Audio callback to mix all active notes with fade-out handling
   var floatStream = cast[ptr UncheckedArray[float32]](stream)
 
   for i in 0 ..< len div sizeof(float32):
     var mixed = 0.0'f32
     var activeCount = 0
 
-    for note in activeNotes:
+    for i in 0 ..< activeNotes.len:
+      var note = activeNotes[i]
       if note.isPlaying:
-        mixed += generateSineAmplitude(note.frequency)
+        if isFadingOut:
+          note.fadeOutVolume = max(0.0, note.fadeOutVolume - 1.0.float32 / (
+              FadeOutDurationMs * SampleRate / 250))
+          if note.fadeOutVolume == 0.0:
+            note.isPlaying = false
+
+        mixed += generateSineAmplitude(note.frequency, note.fadeOutVolume)
         inc activeCount
 
     if activeCount > 0:
@@ -101,7 +119,7 @@ proc quitAudio() =
   sdl2.quit()
 
 proc play*(sequence: seq[SequenceItem]) =
-  ## Play the given sequence
+  ## Play the given sequence with fade-out on DelayBlock
   if not initAudio():
     return
   defer:
@@ -109,7 +127,14 @@ proc play*(sequence: seq[SequenceItem]) =
 
   for item in sequence:
     if item of DelayBlock:
-      sdl2.delay(uint32(cast[DelayBlock](item).beats.float32 * beatDuration))
+      isFadingOut = true
+      sdl2.delay(uint32(FadeOutDurationMs))
+      isFadingOut = false
+      sdl2.delay(
+        uint32(cast[DelayBlock](item).beats.float32 * beatDuration -
+          FadeOutDurationMs
+        )
+      )
 
     elif item of SoundBlock:
       var asNote = cast[SoundBlock](item)
