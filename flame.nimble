@@ -2,7 +2,7 @@
 
 version       = "0.1.0"
 author        = "Navid M"
-description   = "High level music or audio sequencing library that wraps SDL2"
+description   = "High level music or audio synthesis and sequencing library that wraps SDL2"
 license       = "MIT"
 srcDir        = "src"
 bin           = @["flame"]

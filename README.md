@@ -1,6 +1,6 @@
 # Flame
 
-High-level music and audio sequencing library for Nim.
+High-level music and audio synthesis and sequencing library for Nim.
 
 ## Features
 
