@@ -65,11 +65,13 @@ proc audioCallback(userdata: pointer; stream: ptr uint8; len: cint) {.cdecl.} =
   var floatStream = cast[ptr UncheckedArray[float32]](stream)
 
   for i in 0 ..< len div sizeof(float32):
-    var mixed = 0.0'f32
-    var activeCount = 0
+    var
+      mixed = 0.0'f32
+      activeCount = 0
 
     for i in 0 ..< activeNotes.len:
       var note = activeNotes[i]
+
       if note.isPlaying:
         if isFadingOut:
           note.fadeOutVolume = max(0.0, note.fadeOutVolume - 1.0.float32 / (
@@ -92,8 +94,9 @@ proc initAudio*(): bool =
     echo("Couldn't initialize SDL audio:", $getError())
     return false
 
-  var desired: AudioSpec
-  var obtained: AudioSpec
+  var
+    desired: AudioSpec
+    obtained: AudioSpec
 
   desired = AudioSpec(
     freq: cint(SampleRate),
