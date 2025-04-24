@@ -13,4 +13,5 @@ export
   single,
   chord,
   wait,
-  play
+  play,
+  flame
